@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+
+
+    <style>
+        body{
+            padding-top: 65px;
+        }
+    </style>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+    <script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Simple Blog</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Recent</a></li>
+                    <li><a href="/posts/create">Create a post</a></li>
+                    <li><a href="/user/create">Sign up</a></li>
+                    <li><a href="/user/sign-in-page">Sign in</a> </li>
+                </ul>
+                <form class="navbar-form navbar-right">
+                    <input type="text" class="form-control" placeholder="Search...">
+                </form>
+            </div>
+        </div>
+    </nav>
+
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="flash"
+             th:unless="${#strings.isEmpty(message)}"
+             th:text="${message}" style="border-color: darkgreen; background-color: lightgreen; border: 4px">
+        </div>
+    </div><br/>
+    <div class="row">
+        <div class="col-lg-offset-1">
+            <h1>Posts</h1>
+        </div>
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-8">
+                <ul class="list-group" th:each="post : ${posts}">
+                    <li>
+                        <h4>
+                            <a th:text="${post.getTitle()}" th:href="@{/posts/listing/postId(postId=${post.getId()})}">Title</a><br/>
+                            <small th:text="${users.findByEmailAddress(post.getAuthor()).getUsername()}">Author</small>
+                        </h4>
+                        <span th:switch="${post.getContent().length() > 100}">
+                            <span th:case="${true}">
+                                <p th:utext="${post.getContent().substring(0, 100)} + '...'"></p>
+                            </span>
+                            <span th:case="*">
+                                <p th:utext="${post.getContent()}"></p>
+                            </span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <br/>
+</div>
+</body>
+</html>

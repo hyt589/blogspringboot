@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <style>
+        body{
+            padding-top: 65px;
+        }
+    </style>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Simple Blog</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Recent</a></li>
+                    <li><a href="/posts/create">Create a post</a></li>
+                    <li><a href="/user/create">Sign up</a></li>
+                    <li><a href="/user/sign-in-page">Sign in</a> </li>
+                </ul>
+                <form class="navbar-form navbar-right">
+                    <input type="text" class="form-control" placeholder="Search...">
+                </form>
+            </div>
+        </div>
+    </nav>
+</head>
+<body>
+    <form method="get" action="/user/login">
+        Email Address: <input type="email" name="email address" placeholder="example@xxx.com"><br/>
+        Password: <input type="password" name="password" placeholder="Password"><br/>
+        <input type="submit">
+    </form>
+
+    <div class="flash"
+         th:unless="${#strings.isEmpty(message)}"
+         th:text="${message}">
+    </div>
+</body>
+</html>
