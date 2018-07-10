@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+    <script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    <style>
+        body{
+            padding-top: 65px;
+        }
+    </style>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Simple Blog</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Recent</a></li>
+                    <li><a href="/posts/create">Create a post</a></li>
+                    <li><a href="/user/create">Sign up</a></li>
+                    <li><a href="/user/sign-in-page">Sign in</a> </li>
+                </ul>
+                <form class="navbar-form navbar-right" action="/search/do">
+                    <input name="pattern" type="text" class="form-control" placeholder="Search...">
+                </form>
+            </div>
+        </div>
+    </nav>
+</head>
+<body>
+<div class="container">
+    <div class="row" align="center">
+        <span th:switch="${users.isEmpty()&&posts.isEmpty()}">
+            <span th:case="${true}">
+                <h4>Found nothing</h4>
+            </span>
+            <span th:case="*">
+                <h4>Search Results</h4>
+            </span>
+        </span>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <h4 align="center">Posts</h4> <br/>
+            <ul class="list-group" th:each="post : ${posts}">
+                <li>
+                    <h4>
+                        <a th:text="${post.getTitle()}" th:href="@{/posts/listing/postId(postId=${post.getId()})}">Title</a><br/>
+                        <small th:text="${userRepo.findByEmailAddress(post.getAuthor()).getUsername()}">Author</small>
+                    </h4>
+                    <span th:switch="${post.getContent().length() > 100}">
+                            <span th:case="${true}">
+                                <p th:utext="${post.getContent().substring(0, 100)} + '...'"></p>
+                            </span>
+                            <span th:case="*">
+                                <p th:utext="${post.getContent()}"></p>
+                            </span>
+                        </span>
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-6">
+            <h4 align="center">Users</h4><br/>
+            <ul class="list-group" th:each="user : ${users}">
+                <li>
+                    <span th:text="${user.getUsername()}"></span><br/>
+                    <span th:text="${user.getEmailAddress()}">email</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

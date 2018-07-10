@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
     <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="../static/js/bootstrap-wysiwyg.js"></script>
 
     <style>
         body{
@@ -31,8 +32,8 @@
                     <li><a href="/user/create">Sign up</a></li>
                     <li><a href="/user/sign-in-page">Sign in</a> </li>
                 </ul>
-                <form class="navbar-form navbar-right">
-                    <input type="text" class="form-control" placeholder="Search...">
+                <form class="navbar-form navbar-right" action="/search/do">
+                    <input type="text" class="form-control" placeholder="Search..." name="pattern">
                 </form>
             </div>
         </div>
@@ -45,7 +46,25 @@
         <form action="/posts/create/submit" method="post">
             Title: <input type="text" name="title"><br/>
             Content:<br/>
-            <textarea rows="20" cols="80" name="content"></textarea><br/>
+            <textarea id="target" type="text" name="content" hidden="hidden"></textarea>
+
+            <div id="editor">
+            </div>
+
+
+            <script type="text/javascript" src="//unpkg.com/wangeditor/release/wangEditor.min.js"></script>
+            <script type="text/javascript">
+                var E = window.wangEditor;
+                var editor = new E('#editor');
+                var $target = $("#target");
+                // 或者 var editor = new E( document.getElementById('editor') )
+                editor.customConfig.onchange = function (html) {
+                    $target.val(html)
+                };
+                editor.create();
+                $target.val(editor.txt.html());
+
+            </script>
             <input type="submit">
         </form>
     </div>
