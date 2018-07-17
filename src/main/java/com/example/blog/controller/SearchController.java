@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,26 +19,35 @@ import java.util.regex.Pattern;
 @RequestMapping("/search")
 public class SearchController {
 
-    @Autowired
+    private final
     PostRepository postRepository;
 
-    @Autowired
+    private final
     UserRepository userRepository;
 
+    @Autowired
+    public SearchController(UserRepository userRepository,
+                            PostRepository postRepository) {
+        this.userRepository = userRepository;
+        this.postRepository = postRepository;
+    }
+
+
+    @SuppressWarnings("SameReturnValue")
     @RequestMapping("/do")
     public String search(@RequestParam("pattern") String pattern,
                          Model model) {
         List<String> regexList = new ArrayList<>();
-        String regex = "";
+        StringBuilder regex = new StringBuilder();
         for (int i = 0; i < pattern.length(); i++) {
             if (pattern.charAt(i) == ' ') {
-                regexList.add(regex);
-                regex = "";
+                regexList.add(regex.toString());
+                regex = new StringBuilder();
                 continue;
             }
-            regex += pattern.charAt(i);
+            regex.append(pattern.charAt(i));
         }
-        regexList.add(regex);
+        regexList.add(regex.toString());
         List<Pattern> patterns = new ArrayList<>();
         for (String str : regexList
                 ) {
@@ -55,7 +63,8 @@ public class SearchController {
                     ) {
                 Matcher matcherTitle = p.matcher(post.getTitle());
                 Matcher matcherContent = p.matcher(post.getContent());
-                if (matcherTitle.find() || matcherContent.find()) {
+                Matcher matcherAuthor = p.matcher(userRepository.findByEmailAddress(post.getAuthor()).getUsername());
+                if (matcherTitle.find() || matcherContent.find() || matcherAuthor.find()) {
                     postsToShow.add(post);
                 }
 
@@ -73,8 +82,6 @@ public class SearchController {
         model.addAttribute("users", usersToShow);
         model.addAttribute("userRepo", userRepository);
 
-        String ret = "";
-        boolean b = Pattern.compile("hyt").matcher(userRepository.findByEmailAddress("yutong.huang.y@gmail.com").getUsername()).find();
 
         return "search";
     }

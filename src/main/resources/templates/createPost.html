@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>create post</title>
@@ -66,6 +66,11 @@
 
             </script>
             <input type="submit">
+        </form>
+
+        <form action="/posts/create/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <input type="submit" value="upload">
         </form>
     </div>
 </body>

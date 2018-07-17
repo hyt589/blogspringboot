@@ -9,14 +9,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 
+@SuppressWarnings("SameReturnValue")
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
-    public static final int USERNAME_MAX_LENGTH = 32;
+    private static final int USERNAME_MAX_LENGTH = 32;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @RequestMapping("/create")
     public String createUser(@ModelAttribute("message") String message) {

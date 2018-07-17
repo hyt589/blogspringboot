@@ -67,7 +67,7 @@
                                 <p th:utext="${post.getContent().substring(0, 100)} + '...'"></p>
                             </span>
                             <span th:case="*">
-                                <p th:utext="${post.getContent()}"></p>
+                                <p th:utext="${post.getContent()}">content</p>
                             </span>
                         </span>
                     </li>

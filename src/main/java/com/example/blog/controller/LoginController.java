@@ -12,14 +12,15 @@ import java.util.Optional;
 @RequestMapping("/login")
 public class LoginController {
 
+    @SuppressWarnings("SameReturnValue")
     @GetMapping
-    public String loginPage(@RequestParam("next") Optional<String> next,
+    public String loginPage(@SuppressWarnings("OptionalUsedAsFieldOrParameterType") @RequestParam("next") Optional<String> next,
                             @ModelAttribute("message") String message) {
         return "login";
     }
 
     @PostMapping
-    public String login(@RequestParam("next") Optional<String> next, User user, HttpSession session,
+    public String login(@SuppressWarnings("OptionalUsedAsFieldOrParameterType") @RequestParam("next") Optional<String> next, User user, HttpSession session,
                         final RedirectAttributes redirectAttributes) {
         session.setAttribute("CURRENT_USER", user);
         redirectAttributes.addFlashAttribute("message", "Session logged in");

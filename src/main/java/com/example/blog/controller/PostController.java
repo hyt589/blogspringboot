@@ -7,29 +7,36 @@ import com.example.blog.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 @Controller
 @RequestMapping("/posts")
 public class PostController {
 
-    @Autowired
-    PostRepository postRepository;
+    private final PostRepository postRepository;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    UserRepository userRepository;
+    public PostController(final PostRepository postRepository,
+                          final UserRepository userRepository) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
+    }
 
+    @SuppressWarnings("SameReturnValue")
     @RequestMapping("/create")
     public String createPost() {
         return "createPost";
     }
 
+    @SuppressWarnings("SameReturnValue")
     @RequestMapping("/create/submit")
     public String submission(@RequestParam("title") String title,
                              @RequestParam("content") String content,
@@ -52,6 +59,23 @@ public class PostController {
         } else {
             model.addAttribute("message", "Post does not exist");
             return "error";
+        }
+
+    }
+
+    @RequestMapping("/create/upload")
+    public void upLoad(@RequestParam("file") MultipartFile file,
+                       HttpSession session) throws Exception {
+        byte[] bytes = file.getBytes();
+        String filename = file.getOriginalFilename();
+        User user = (User)session.getAttribute("CURRENT_USER");
+        filename = "src/main/resources/static/upload/"+user.getId() + "_" + filename;
+        File saveFile = new File(filename);
+        boolean created = saveFile.createNewFile();
+        if (created) {
+            try (OutputStream outputStream = new FileOutputStream(filename)) {
+                outputStream.write(bytes);
+            }
         }
 
     }

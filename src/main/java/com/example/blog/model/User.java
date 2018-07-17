@@ -11,12 +11,13 @@ import java.security.spec.KeySpec;
 import java.util.Base64;
 import java.util.Date;
 
+@SuppressWarnings("unused")
 @Entity
 public class User {
 
-    public static final int SALT_LENGTH = 32;
-    public static final int KEY_SIZE = 128;
-    public static final int ITERATIONS = 16;
+    private static final int SALT_LENGTH = 32;
+    private static final int KEY_SIZE = 128;
+    private static final int ITERATIONS = 16;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -95,7 +96,7 @@ public class User {
         this.created = created;
     }
 
-    public static String hashPassword(String password, byte[] salt) {
+    private static String hashPassword(String password, byte[] salt) {
         KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATIONS, KEY_SIZE);
         SecretKeyFactory secretKeyFactory = null;
         try {
@@ -106,7 +107,7 @@ public class User {
         byte[] hash = null;
         try {
             hash = secretKeyFactory.generateSecret(spec).getEncoded();
-        } catch (InvalidKeySpecException e) {
+        } catch (InvalidKeySpecException | NullPointerException e) {
             e.printStackTrace();
         }
         return Base64.getEncoder().encodeToString(hash);
