@@ -18,11 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class IndexController {
 
-//    @Autowired
-//    PostRepository postRepository;
-//
-//    @Autowired
-//    UserRepository userRepository;
+
     private PostRepository postRepository;
     private UserRepository userRepository;
 
